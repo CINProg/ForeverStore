@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"ForeverStore/p2p"
+	"log"
 )
 
 func main() {
-	fmt.Println("Hello store")
+	tr := p2p.NewTCPTransport(":3000")
+	if err := tr.ListenAndAccept(); err != nil {
+		log.Fatal(err)
+	}
+	select {}
 }
