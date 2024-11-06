@@ -32,5 +32,5 @@ func main() {
 	if err := tr.ListenAndAccept(); err != nil {
 		log.Fatal(err)
 	}
-	select {}
+
 }
