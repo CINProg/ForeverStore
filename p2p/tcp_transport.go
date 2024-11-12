@@ -103,7 +103,6 @@ func (t *TCPtransport) handleConn(conn net.Conn) {
 	for {
 		err = t.Decoder.Decode(conn, &rpc)
 		if err != nil {
-			//fmt.Printf("TCP reader error: %s\n", err)
 			return
 		}
 
