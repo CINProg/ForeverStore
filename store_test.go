@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
 	"testing"
 )
 
@@ -18,14 +19,43 @@ func TestPathTransformFunc(t *testing.T) {
 	}
 }
 
+func TestStoreDeleteKey(t *testing.T) {
+
+	opts := StoreOpts{
+		PathTransformFunc: CASPathTransformFunc,
+	}
+	s := NewStore(opts)
+	key := "momsspecials"
+	data := []byte("some jpg bytes")
+	if err := s.writeStream(key, bytes.NewReader(data)); err != nil {
+		t.Error(err)
+	}
+
+	//if s.Has("momsspecials")
+	if err := s.Delete(key); err != nil {
+		t.Error(err)
+	}
+}
+
 func TestNewStore(t *testing.T) {
 
 	opts := StoreOpts{
 		PathTransformFunc: CASPathTransformFunc,
 	}
 	s := NewStore(opts)
-	data := bytes.NewReader([]byte("some jpg bytes"))
-	if err := s.writeStream("myspecialpicture", data); err != nil {
+	key := "momsspecials"
+	data := []byte("some jpg bytes")
+	if err := s.writeStream(key, bytes.NewReader(data)); err != nil {
 		t.Error(err)
+	}
+
+	r, err := s.readStream(key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	b, _ := ioutil.ReadAll(r)
+	if string(b) != string(data) {
+		t.Errorf("have %s \n want %s", b, data)
 	}
 }
